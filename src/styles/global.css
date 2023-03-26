@@ -1,0 +1,18 @@
+:root {
+    --primary-grey: #121212;
+    --secondary: #DA0037;
+    --primary-white: #EDEDED;
+    --secondary-grey: #444444;
+}
+
+#root {
+    height: 100vh;
+}
+
+body {
+    background-color: var(--primary-grey);
+    color: var(--primary-white);
+    max-height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+}
