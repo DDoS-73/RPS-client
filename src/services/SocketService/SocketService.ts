@@ -1,13 +1,17 @@
 import { io, Socket } from 'socket.io-client';
+import { JoinToRoomResponse } from '../../models/JoinToRoomResponse';
 
-interface ServerToClientEvents {
+export interface ServerToClientEvents {
 	noArg: () => void;
 	basicEmit: (a: number, b: string, c: Buffer) => void;
 	withAck: (d: string, callback: (e: number) => void) => void;
 }
 
-interface ClientToServerEvents {
-	hello: () => void;
+export interface ClientToServerEvents {
+	join: (
+		roomID: string,
+		callback: (response: JoinToRoomResponse) => void
+	) => void;
 }
 
 class SocketService {
