@@ -15,15 +15,26 @@ export interface ClientToServerEvents {
 }
 
 class SocketService {
-	public socket: Socket<ServerToClientEvents, ClientToServerEvents> | null =
+	private _socket: Socket<ServerToClientEvents, ClientToServerEvents> | null =
 		null;
 
-	connect(url: string) {
-		this.socket = io(url);
+	connect(url: string): Promise<boolean> {
+		this._socket = io(url);
 
-		this.socket.on('connect_error', (err: Error) => {
-			throw err;
+		return new Promise((rs, rj) => {
+			this._socket?.on('connect', () => {
+				rs(true);
+			});
+
+			this._socket?.on('connect_error', (err: Error) => {
+				rj(false);
+				throw err;
+			});
 		});
+	}
+
+	get socket(): Socket<ServerToClientEvents, ClientToServerEvents> | null {
+		return this._socket;
 	}
 
 	disconnect() {

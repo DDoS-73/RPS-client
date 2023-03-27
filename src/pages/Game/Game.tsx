@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SocketService from '../../services/SocketService/SocketService';
 import GameService from '../../services/GameService/GameService';
@@ -6,7 +6,11 @@ import { WrapperStyled } from '../../styled';
 import WaitingRoom from '../../components/WaitingRoom';
 import PlayRoom from '../../components/PlayRoom';
 
-const Game = () => {
+interface IGameProps {
+	isConnected: boolean;
+}
+
+const Game: FC<IGameProps> = ({ isConnected }) => {
 	const { roomID } = useParams();
 	const [status, setStatus] = useState('');
 
@@ -19,14 +23,14 @@ const Game = () => {
 	};
 
 	useEffect(() => {
-		if (SocketService.socket) {
+		if (isConnected) {
 			joinToRoom();
 		}
-	}, [SocketService.socket]);
+	}, [isConnected]);
 
 	return (
 		<>
-			{status === '' ? (
+			{!isConnected ? (
 				<WrapperStyled>
 					<h1>Connecting</h1>
 				</WrapperStyled>
