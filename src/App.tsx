@@ -10,16 +10,20 @@ function App() {
 	const connectSocket = () => {
 		SocketService.connect(SERVER_URL);
 	};
+	const disconnectSocket = () => {
+		SocketService.disconnect();
+	};
 
 	useEffect(() => {
 		connectSocket();
+		return disconnectSocket;
 	}, []);
 
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path='/' element={<Home />} />
-				<Route path='/:id' element={<Game />} />
+				<Route path='/:roomID' element={<Game />} />
 			</Routes>
 		</BrowserRouter>
 	);

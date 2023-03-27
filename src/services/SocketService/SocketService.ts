@@ -25,6 +25,10 @@ class SocketService {
 			throw err;
 		});
 	}
+
+	disconnect() {
+		this.socket?.disconnect();
+	}
 }
 
 export default new SocketService();
