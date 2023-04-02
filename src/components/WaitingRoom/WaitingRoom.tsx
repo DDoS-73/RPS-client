@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { WrapperStyled, CopyLinkFieldStyled, ButtonStyled } from '../../styled';
+import { WrapperStyled, TextField, ButtonStyled } from '../../styled';
 import { LoopingTextStyled } from '../../styled/';
 
 const WaitingRoom = () => {
@@ -13,7 +13,7 @@ const WaitingRoom = () => {
 			<LoopingTextStyled as='h2'>
 				Send the link to your friend
 			</LoopingTextStyled>
-			<CopyLinkFieldStyled>{window.location.href}</CopyLinkFieldStyled>
+			<TextField>{window.location.href}</TextField>
 			<ButtonStyled onClick={copyText}>{btnText}</ButtonStyled>
 		</WrapperStyled>
 	);

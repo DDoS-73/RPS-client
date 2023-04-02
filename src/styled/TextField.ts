@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const CopyLinkFieldStyled = styled.p`
+export const TextField = styled.p`
 	background-color: var(--secondary-grey);
 	border-radius: 5px;
 	font-size: 1.25rem;

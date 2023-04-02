@@ -5,6 +5,10 @@
     --secondary-grey: #444444;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 #root {
     height: 100vh;
 }
