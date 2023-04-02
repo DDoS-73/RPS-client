@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SocketService from '../../services/SocketService/SocketService';
 import GameService from '../../services/GameService/GameService';
-import { WrapperStyled } from '../../styled';
 import WaitingRoom from '../../components/WaitingRoom';
 import PlayRoom from '../../components/PlayRoom';
 
@@ -10,37 +9,32 @@ interface IGameProps {
 	isConnected: boolean;
 }
 
+export interface IStartGame {
+	started: boolean;
+}
+
 const Game: FC<IGameProps> = ({ isConnected }) => {
 	const { roomID } = useParams();
-	const [status, setStatus] = useState('');
+	const [isStarted, setIsStarted] = useState(false);
 
 	const joinToRoom = async () => {
-		const status = await GameService.joinToRoom(
-			SocketService.socket,
-			roomID || ''
-		);
-		setStatus(status);
+		await GameService.joinToRoom(SocketService.socket, roomID || '');
+	};
+
+	const handleGameStart = () => {
+		GameService.startGame(SocketService.socket, ({ started }) => {
+			setIsStarted(started);
+		});
 	};
 
 	useEffect(() => {
 		if (isConnected) {
 			joinToRoom();
+			handleGameStart();
 		}
 	}, [isConnected]);
 
-	return (
-		<>
-			{!isConnected ? (
-				<WrapperStyled>
-					<h1>Connecting</h1>
-				</WrapperStyled>
-			) : status === 'waiting' ? (
-				<WaitingRoom />
-			) : (
-				<PlayRoom />
-			)}
-		</>
-	);
+	return <>{isStarted ? <PlayRoom /> : <WaitingRoom />}</>;
 };
 
 export default Game;

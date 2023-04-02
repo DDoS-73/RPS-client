@@ -4,9 +4,10 @@ import {
 	ServerToClientEvents,
 } from '../SocketService/SocketService';
 import { JoinToRoomResponse } from '../../models/JoinToRoomResponse';
+import { IStartGame } from '../../pages/Game/Game';
 
 class GameService {
-	joinToRoom(
+	public joinToRoom(
 		socket: Socket<ServerToClientEvents, ClientToServerEvents> | null,
 		roomID: string
 	): Promise<string> {
@@ -15,6 +16,13 @@ class GameService {
 				rs(response.status);
 			});
 		});
+	}
+
+	public startGame(
+		socket: Socket<ServerToClientEvents, ClientToServerEvents> | null,
+		listener: (options: IStartGame) => void
+	) {
+		socket?.on('game_start', listener);
 	}
 }
 

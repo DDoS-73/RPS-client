@@ -1,10 +1,9 @@
 import { io, Socket } from 'socket.io-client';
 import { JoinToRoomResponse } from '../../models/JoinToRoomResponse';
+import { IStartGame } from '../../pages/Game/Game';
 
 export interface ServerToClientEvents {
-	noArg: () => void;
-	basicEmit: (a: number, b: string, c: Buffer) => void;
-	withAck: (d: string, callback: (e: number) => void) => void;
+	game_start: (options: IStartGame) => void;
 }
 
 export interface ClientToServerEvents {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 const PlayRoom = () => {
-	return <div></div>;
+	return <div>play</div>;
 };
 
 export default PlayRoom;
