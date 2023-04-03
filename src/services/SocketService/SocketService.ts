@@ -1,9 +1,11 @@
 import { io, Socket } from 'socket.io-client';
 import { JoinToRoomResponse } from '../../models/JoinToRoomResponse';
 import { IStartGame } from '../../pages/Game/Game';
+import { Signs } from '../../models/Signs';
 
 export interface ServerToClientEvents {
 	game_start: (options: IStartGame) => void;
+	opponent_move: (sign: Signs) => void;
 }
 
 export interface ClientToServerEvents {
@@ -11,6 +13,7 @@ export interface ClientToServerEvents {
 		roomID: string,
 		callback: (response: JoinToRoomResponse) => void
 	) => void;
+	move: (sign: Signs) => void;
 }
 
 class SocketService {

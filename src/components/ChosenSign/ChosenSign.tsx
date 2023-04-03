@@ -14,12 +14,13 @@ const Container = styled.div`
 
 interface IChosenSignProps {
 	icon: IconDefinition | null;
+	condition: boolean;
 }
 
-const ChosenSign: FC<IChosenSignProps> = ({ icon }) => {
+const ChosenSign: FC<IChosenSignProps> = ({ icon, condition }) => {
 	return (
 		<Container>
-			{icon ? <FontAwesomeIcon icon={icon} size='5x' /> : null}
+			{icon && condition ? <FontAwesomeIcon icon={icon} size='5x' /> : null}
 		</Container>
 	);
 };

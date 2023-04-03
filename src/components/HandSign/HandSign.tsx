@@ -28,13 +28,12 @@ const Container = styled.div`
 
 interface IHandSignProps {
 	icon: IconDefinition;
-	onClick: (name: string) => void;
-	name: string;
+	onClick: () => void;
 }
 
-const HandSign: FC<IHandSignProps> = ({ icon, onClick, name }) => {
+const HandSign: FC<IHandSignProps> = ({ icon, onClick }) => {
 	return (
-		<Container onClick={() => onClick(name)}>
+		<Container onClick={onClick}>
 			<FontAwesomeIcon icon={icon} size='3x' />
 		</Container>
 	);

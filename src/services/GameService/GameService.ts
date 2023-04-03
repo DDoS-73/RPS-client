@@ -5,6 +5,7 @@ import {
 } from '../SocketService/SocketService';
 import { JoinToRoomResponse } from '../../models/JoinToRoomResponse';
 import { IStartGame } from '../../pages/Game/Game';
+import { Signs } from '../../models/Signs';
 
 class GameService {
 	public joinToRoom(
@@ -23,6 +24,20 @@ class GameService {
 		listener: (options: IStartGame) => void
 	) {
 		socket?.on('game_start', listener);
+	}
+
+	public move(
+		socket: Socket<ServerToClientEvents, ClientToServerEvents> | null,
+		sign: Signs
+	) {
+		socket?.emit('move', sign);
+	}
+
+	public opponentMove(
+		socket: Socket<ServerToClientEvents, ClientToServerEvents> | null,
+		listener: (options: Signs) => void
+	) {
+		socket?.on('opponent_move', listener);
 	}
 }
 
