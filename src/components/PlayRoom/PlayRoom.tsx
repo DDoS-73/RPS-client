@@ -13,6 +13,7 @@ import { Signs } from '../../models/Signs';
 import { chooseWinner } from '../../utils/chooseWinner';
 import { getKeyByValue } from '../../utils/getKeyByValue';
 import { ServiceContext } from '../../contexts/ServiceContext';
+import { useScore } from '../../hooks/useScore';
 
 const FlexContainer = styled.div`
 	display: flex;
@@ -42,7 +43,7 @@ const PlayRoom = () => {
 	const [userSign, setUserSign] = useState<IconDefinition | null>(null);
 	const [opponentSign, setOpponentSign] = useState<IconDefinition | null>(null);
 	const [disabled, setDisabled] = useState(false);
-	const [message, setMessage] = useState('New Round!');
+	const [score, dispatch] = useScore();
 	const { gameService } = useContext(ServiceContext);
 
 	const signs: Record<Signs, IconDefinition> = {
@@ -55,15 +56,28 @@ const PlayRoom = () => {
 		setDisabled(false);
 		setUserSign(null);
 		setOpponentSign(null);
-		setMessage('New Round!');
+	};
+
+	const calculateScore = () => {
+		const user = getKeyByValue(signs, userSign) as Signs;
+		const opponent = getKeyByValue(signs, opponentSign) as Signs;
+
+		switch (chooseWinner(user, opponent)) {
+			case 1:
+				dispatch({ type: 'win' });
+				break;
+			case -1:
+				dispatch({ type: 'lose' });
+				break;
+			default:
+				break;
+		}
 	};
 
 	const completeRound = () => {
 		setDisabled(true);
-		const user = getKeyByValue<IconDefinition | null>(signs, userSign);
-		const opponent = getKeyByValue<IconDefinition | null>(signs, opponentSign);
-		setMessage(chooseWinner(user as Signs, opponent as Signs));
-		setTimeout(resetGame, 4000);
+		calculateScore();
+		setTimeout(resetGame, 2000);
 	};
 
 	const handleUserMove = (sign: Signs) => {
@@ -93,7 +107,9 @@ const PlayRoom = () => {
 		<Container>
 			<PlayerName>Your friend</PlayerName>
 			<ChosenSign icon={opponentSign} condition={!!userSign} />
-			<TextField>{message}</TextField>
+			<TextField>
+				{score.wins}:{score.loses}
+			</TextField>
 			<ChosenSign icon={userSign} condition={true} />
 			<PlayerName>Choose a sign</PlayerName>
 			<SignsContainer>
