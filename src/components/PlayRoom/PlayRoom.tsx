@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
 	faHandPaper,
@@ -10,10 +10,9 @@ import ChosenSign from '../ChosenSign';
 import HandSign from '../HandSign';
 import { TextField } from '../../styled';
 import { Signs } from '../../models/Signs';
-import GameService from '../../services/GameService/GameService';
-import SocketService from '../../services/SocketService/SocketService';
 import { chooseWinner } from '../../utils/chooseWinner';
 import { getKeyByValue } from '../../utils/getKeyByValue';
+import { ServiceContext } from '../../contexts/ServiceContext';
 
 const FlexContainer = styled.div`
 	display: flex;
@@ -44,6 +43,7 @@ const PlayRoom = () => {
 	const [opponentSign, setOpponentSign] = useState<IconDefinition | null>(null);
 	const [disabled, setDisabled] = useState(false);
 	const [message, setMessage] = useState('New Round!');
+	const { gameService } = useContext(ServiceContext);
 
 	const signs: Record<Signs, IconDefinition> = {
 		paper: faHandPaper,
@@ -69,12 +69,12 @@ const PlayRoom = () => {
 	const handleUserMove = (sign: Signs) => {
 		if (!disabled) {
 			setUserSign(signs[sign]);
-			GameService.move(SocketService.socket, sign);
+			gameService.move(sign);
 		}
 	};
 
 	const onOpponentMove = () => {
-		GameService.opponentMove(SocketService.socket, (sign: Signs) => {
+		gameService.opponentMove((sign: Signs) => {
 			setOpponentSign(signs[sign]);
 		});
 	};

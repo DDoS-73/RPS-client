@@ -1,7 +1,6 @@
 import { io, Socket } from 'socket.io-client';
-import { JoinToRoomResponse } from '../../models/JoinToRoomResponse';
-import { IStartGame } from '../../pages/Game/Game';
 import { Signs } from '../../models/Signs';
+import { IStartGame } from '../../models/isGameStartedResponse';
 
 export interface ServerToClientEvents {
 	game_start: (options: IStartGame) => void;
@@ -9,39 +8,25 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-	join: (
-		roomID: string,
-		callback: (response: JoinToRoomResponse) => void
-	) => void;
+	join: (roomID: string) => void;
 	move: (sign: Signs) => void;
 }
 
 class SocketService {
-	private _socket: Socket<ServerToClientEvents, ClientToServerEvents> | null =
-		null;
+	private readonly _socket!: Socket<ServerToClientEvents, ClientToServerEvents>;
+	static instance: SocketService;
 
-	connect(url: string): Promise<boolean> {
-		this._socket = io(url);
-
-		return new Promise((rs, rj) => {
-			this._socket?.on('connect', () => {
-				rs(true);
-			});
-
-			this._socket?.on('connect_error', (err: Error) => {
-				rj(false);
-				throw err;
-			});
-		});
+	constructor(serverUrl: string) {
+		if (SocketService.instance) {
+			return SocketService.instance;
+		}
+		this._socket = io(serverUrl);
+		SocketService.instance = this;
 	}
 
-	get socket(): Socket<ServerToClientEvents, ClientToServerEvents> | null {
+	get socket(): Socket<ServerToClientEvents, ClientToServerEvents> {
 		return this._socket;
-	}
-
-	disconnect() {
-		this.socket?.disconnect();
 	}
 }
 
-export default new SocketService();
+export default SocketService;
