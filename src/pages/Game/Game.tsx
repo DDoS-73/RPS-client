@@ -19,9 +19,16 @@ const Game = () => {
 		});
 	};
 
+	const handleOpponentLeave = () => {
+		gameService.opponentLeave(() => {
+			setIsStarted(false);
+		});
+	};
+
 	useEffect(() => {
 		joinToRoom();
 		handleGameStart();
+		handleOpponentLeave();
 	}, []);
 
 	return <>{isStarted ? <PlayRoom /> : <WaitingRoom />}</>;

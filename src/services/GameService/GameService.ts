@@ -27,6 +27,10 @@ class GameService {
 	public opponentMove(listener: (options: Signs) => void) {
 		this.socket.on('opponent_move', listener);
 	}
+
+	public opponentLeave(listener: () => void) {
+		this.socket.on('opponent_leave', listener);
+	}
 }
 
 export default GameService;
