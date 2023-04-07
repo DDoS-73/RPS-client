@@ -15,15 +15,15 @@ import { getKeyByValue } from '../../utils/getKeyByValue';
 import { ServiceContext } from '../../contexts/ServiceContext';
 import { useScore } from '../../hooks/useScore';
 
-const FlexContainer = styled.div`
+const FlexContainer = styled.div<{ width?: string }>`
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
+	width: ${({ width }) => width};
 `;
 
 const Container = styled(FlexContainer)`
 	flex-direction: column;
-	justify-content: space-between;
 	padding: 15px;
 	height: 100%;
 	max-width: 410px;
@@ -34,15 +34,13 @@ const PlayerName = styled.h2`
 	margin: 0;
 `;
 
-const SignsContainer = styled(FlexContainer)`
-	justify-content: space-between;
-	width: 100%;
-`;
-
 const PlayRoom = () => {
 	const [userSign, setUserSign] = useState<IconDefinition | null>(null);
 	const [opponentSign, setOpponentSign] = useState<IconDefinition | null>(null);
 	const [disabled, setDisabled] = useState(false);
+	const [round, setRound] = useState(1);
+	const [message, setMessage] = useState(`Round ${round}`);
+
 	const [score, dispatch] = useScore();
 	const { gameService } = useContext(ServiceContext);
 
@@ -52,10 +50,12 @@ const PlayRoom = () => {
 		scissors: faHandScissors,
 	};
 
-	const resetGame = () => {
+	const startNewRound = () => {
 		setDisabled(false);
 		setUserSign(null);
 		setOpponentSign(null);
+		setRound(round + 1);
+		setMessage(`Round ${round + 1}`);
 	};
 
 	const calculateScore = () => {
@@ -65,9 +65,14 @@ const PlayRoom = () => {
 		switch (chooseWinner(user, opponent)) {
 			case 1:
 				dispatch({ type: 'win' });
+				setMessage('You win :)');
 				break;
 			case -1:
 				dispatch({ type: 'lose' });
+				setMessage('You lose :(');
+				break;
+			case 0:
+				setMessage('Tie...');
 				break;
 			default:
 				break;
@@ -77,7 +82,7 @@ const PlayRoom = () => {
 	const completeRound = () => {
 		setDisabled(true);
 		calculateScore();
-		setTimeout(resetGame, 2000);
+		setTimeout(startNewRound, 2000);
 	};
 
 	const handleUserMove = (sign: Signs) => {
@@ -107,12 +112,15 @@ const PlayRoom = () => {
 		<Container>
 			<PlayerName>Your friend</PlayerName>
 			<ChosenSign icon={opponentSign} condition={!!userSign} />
-			<TextField>
-				{score.wins}:{score.loses}
-			</TextField>
+			<FlexContainer width='60%'>
+				<TextField>{message}</TextField>
+				<TextField>
+					{score.wins}:{score.loses}
+				</TextField>
+			</FlexContainer>
 			<ChosenSign icon={userSign} condition={true} />
 			<PlayerName>Choose a sign</PlayerName>
-			<SignsContainer>
+			<FlexContainer width='100%'>
 				{Object.entries(signs).map(([name, icon]) => (
 					<HandSign
 						key={name}
@@ -120,7 +128,7 @@ const PlayRoom = () => {
 						icon={icon}
 					/>
 				))}
-			</SignsContainer>
+			</FlexContainer>
 		</Container>
 	);
 };
