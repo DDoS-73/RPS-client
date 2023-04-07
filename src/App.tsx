@@ -5,6 +5,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Game from './pages/Game';
 import { ServiceContext } from './contexts/ServiceContext';
 import { gameService, socketService } from './services/services';
+import { TailSpin } from 'react-loader-spinner';
+import { WrapperStyled } from './styled';
 
 function App() {
 	const [isConnected, setIsConnected] = useState(false);
@@ -29,7 +31,18 @@ function App() {
 					</BrowserRouter>
 				</ServiceContext.Provider>
 			) : (
-				'wait'
+				<WrapperStyled>
+					<TailSpin
+						height='80'
+						width='80'
+						color='var(--secondary)'
+						ariaLabel='tail-spin-loading'
+						radius='0'
+						wrapperStyle={{}}
+						wrapperClass=''
+						visible={true}
+					/>
+				</WrapperStyled>
 			)}
 		</>
 	);
